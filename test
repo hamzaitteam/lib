@@ -1,45 +1,13 @@
-async mounted() {
-  const formData = new FormData();
-  formData.append('p_file_id',6);
-  this.responseData = await this.getAllRegulations('/get_library',formData);
-  
-  // Initialize searchResults here, after responseData is populated
-  this.searchResults = [...this.responseData];
-
-  // rest of your code...
-},
-methods: {
-  // ...your other methods...
-
-  async submitForm() {
-    // ...your code before the axios post request...
-
-    const response = await this.axios.post('/insert_library',formData);
-    if(response.data.p_err_code==4){
-      // ...your code before pushing to responseData...
-
-      this.responseData.push({
-        // ...your data...
-      });
-      
-      // Update searchResults when a new item is added to responseData
-      this.searchResults = [...this.responseData];
-
-      // ...your code after pushing to responseData...
-    }
-  },
-
-  search() {
-    if (this.searchTerm) {
-      const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
-      this.searchResults = this.responseData.filter(item =>
-        (item.name && item.name.toLowerCase().includes(lowerCaseSearchTerm)) ||
-        (item.type && item.type.toLowerCase().includes(lowerCaseSearchTerm)) ||
-        (item.source && item.source.toLowerCase().includes(lowerCaseSearchTerm)) ||
-        (item.status && item.status.toLowerCase().includes(lowerCaseSearchTerm))
-      );
-    } else {
-      this.searchResults = [...this.responseData];
-    }
-  },
+search() {
+  if (this.searchTerm) {
+    const lowerCaseSearchTerm = this.searchTerm.toLowerCase();
+    this.searchResults = this.responseData.filter(item =>
+      (item.LIBER_NM && item.LIBER_NM.toLowerCase().includes(lowerCaseSearchTerm)) ||
+      (item.FILE_ID && item.FILE_ID.toLowerCase().includes(lowerCaseSearchTerm)) ||
+      (item.SOURCE_NAME && item.SOURCE_NAME.toLowerCase().includes(lowerCaseSearchTerm)) ||
+      (item.STATUS_NAME && item.STATUS_NAME.toLowerCase().includes(lowerCaseSearchTerm))
+    );
+  } else {
+    this.searchResults = [...this.responseData];
+  }
 },
