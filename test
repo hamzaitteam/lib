@@ -1,93 +1,39 @@
-<div class="card" style="border: 2px solid; border-color: #82c5ff; box-shadow: none">
-      <h5 class="card-header clickable" @click="toggleShowHide"    style="background-color: rgb(48 52 90); color: wheat; padding: 10px;">
-        <i class="fa fa-add" style=" margin-left: 4px;"></i>اضافة عنصر جديد للمكتبة 
-      </h5>
-<div class="card-body" >
-        <div v-if="showAdd"   class="row">
-          <div class="row" style="margin-top: 11px;">
-          <div class="col-12 col-md-3">
-            <label class="form-label" 
-            for="modalEditUserLastName" style="color: rgb(1, 1, 1)">الاسم   
-            </label>
-            <input v-model="name" type="text"  class="form-control">
-            <p v-if="errors.name" class="error" >{{ errors.name }}</p>
-          </div>        
-          <div class="col-md-3">
-            <label style="color: rgb(1, 1, 1)">النوع</label>
-            <select ref="typeSelect" v-model="type"  class="select2 form-select" data-allow-clear="true" >
-              <option selected></option>
-              <option  v-for="(option,index) in typeOptions" :key="index" :value="option.CONST_ID">
-                {{ option.CONST_NAME }}
-              </option> 
-         
-            </select>
-            <p v-if="errors.type" class="error" >{{ errors.type }}</p>
+methods: {
+  onFileChange(e) {
+    let files = e.target.files || e.dataTransfer.files;
+    if (!files.length)
+      return;
+    this.createImage(files[0]);
+  },
 
-          </div>
-          <div class="col-md-3">
-            <label style="color: rgb(1, 1, 1)">المصدر</label>
-            <select ref="sourceSelect" v-model="source" class="select2 form-select" data-allow-clear="true" >
-              <option selected></option>
-              <option  v-for="(option,index) in sourceOptions" :key="index" :value="option.CONST_ID">
-                {{ option.CONST_NAME }}
-              </option> 
-            </select>
-            <p v-if="errors.source" class="error" >{{ errors.source }}</p>
+  createImage(file) {
+    let reader = new FileReader();
+    let vm = this;
+    reader.onload = (e) => {
+      vm.pdfFile = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  },
 
-          </div>
-          <div class="col-md-3">
-            <label style="color: rgb(1, 1, 1)">الحالة</label>
-            <select ref="statusSelect"  v-model="status" class="select2 form-select" data-allow-clear="true" >
-               <option  v-for="(option,index) in statusOptions" :key="index" :value="option.CONST_ID">
-                {{ option.CONST_NAME }}
-              </option> 
-            </select>
-            <p v-if="errors.status" class="error" >{{ errors.status }}</p>
+  submitForm() {
+    //...
+    this.sendData();
+    //...
+  },
 
-          </div> 
-          <div class="col-12 col-md-3">
-                        <label for="flatpickr-date" class="form-label" style="color: rgb(1, 1, 1)"> تاريخ الاصدار</label>
-                          <input v-model="issueDate" type="date"   class="form-control" >
-                          <p v-if="errors.issueDate" class="error" >{{ errors.issueDate }}</p>
+  sendData() {
+    let data = {
+      //...
+      pdfFile: this.pdfFile
+      //...
+    };
 
-            </div>
- 
-          <div class="col-12 col-md-3">
-                    <label for="flatpickr-date" class="form-label" style="color: rgb(1, 1, 1)"> تاريخ التعديل</label>
-                      <input v-model="modificationDate" type="date"   class="form-control" >
-                      <p v-if="errors.modificationDate" class="error" >{{ errors.modificationDate }}</p>
-
-            </div> 
-          <div class="col-md-6">
-            <label style="color: rgb(1, 1, 1)">  الملاحظات</label>
-            <textarea v-model="note" class="form-control"   rows="1" ></textarea>
-          </div>
-          
-        </div>
-        
-        <br>
-        <br>
-        <div class="row d-flex justify-content-center">
-          <div class="col-md-1">
-            <button type="submit" @click="submitForm" class="btn btn-primary waves-effect waves-light">
-              <i class="fa fa-plus"></i>
-              اضافة
-            </button>
-          </div>
-  
-          <div class="col-md-1">
-            <button type="button" class="btn btn-info waves-effect waves-light">
-              <i class="fa fa-search"></i>
-              بحث
-            </button>
-          </div> <div class="col-md-1">
-            <button type="button" class="btn btn-danger waves-effect waves-light">
-              <i class="fa fa-eraser"></i>
-              تفريغ
-            </button>
-          </div>
-        </div>
-    
-        </div>
-      </div>
-</div>
+    axios.post('/api-endpoint', data)
+      .then(response => {
+        // handle response
+      })
+      .catch(error => {
+        // handle error
+      });
+  }
+}
