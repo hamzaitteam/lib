@@ -1,32 +1,9 @@
- 
-
-data() {
-  return {
-     // your other data...
-     pdfSrc: '',
-     showModal: false,
-     // rest of your data properties
-  };
-},
-methods:{
-  // your other methods...
-  showFile(pdfBase64) {
-     this.pdfSrc = "data:application/pdf;base64," + pdfBase64;
-     this.showModal = true;
-  },
-  // your other methods...
-}
-
 <div v-if="showModal" class="modal">
-  <span class="close" @click="showModal=false">&times;</span>
-  <embed :src="pdfSrc" type="application/pdf" width="100%" height="600px"/>
+  <div class="modal-content">
+    <span class="close" @click="showModal=false">&times;</span>
+    <embed :src="pdfSrc" type="application/pdf" style="width: 100%; height: 80vh;" />
+  </div>
 </div>
-
------------------
-<td>
-   <button @click="showFile(item.p_liber_file_path)">Show File</button>
-</td>
-----------------
 .modal {
   display: block;
   position: fixed;
@@ -43,8 +20,11 @@ methods:{
 .modal-content {
   position: relative;
   margin: auto;
-  padding: 0;
-  width: 90%;
+  padding: 20px;
+  width: 80%;
+  border: 1px solid #888;
+  background-color: #fefefe;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 .close {
