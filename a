@@ -1,0 +1,48 @@
+/* The modal's background overlay */
+.modal-delete {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+/* The modal window itself */
+.modal-delete-content {
+  background: white;
+  padding: 20px;
+  border-radius: 4px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+}
+
+/* Button styles */
+.modal-delete-content button {
+  padding: 10px;
+  margin: 15px 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007BFF;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.modal-delete-content button:hover {
+  background-color: #0056b3;
+}
+
+/* Styles for the 'No' button */
+.modal-delete-content button.cancel {
+  background-color: #dc3545;
+}
+
+.modal-delete-content button.cancel:hover {
+  background-color: #c82333;
+}
