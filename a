@@ -1,26 +1,15 @@
+TITLE: SQL Server Import and Export Wizard
+------------------------------
 
-   Illuminate\Database\QueryException
+The operation could not be completed.
 
-  SQLSTATE[08001]: [Microsoft][ODBC Driver 17 for SQL Server]TCP Provider: No connection could be made because the target machine actively refused it.
- (Connection: sqlsrv, SQL: select * from sys.sysobjects where id = object_id(migrations) and xtype in ('U', 'V'))
+------------------------------
+ADDITIONAL INFORMATION:
 
-  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:795
-    791▕         // If an exception occurs when attempting to run a query, we'll format the error
-    792▕         // message to include the bindings with SQL, which will make this exception a
-    793▕         // lot more helpful to the developer instead of just the database's errors.
-    794▕         catch (Exception $e) {
-  ➜ 795▕             throw new QueryException(
-    796▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
-    797▕             );
-    798▕         }
-    799▕     }
+The 'Microsoft.ACE.OLEDB.16.0' provider is not registered on the local machine. (System.Data)
 
-  1   vendor\laravel\framework\src\Illuminate\Database\Connectors\Connector.php:65
-      PDOException::("SQLSTATE[08001]: [Microsoft][ODBC Driver 17 for SQL Server]TCP Provider: No connection could be made because the target machine actively refused it.
-")
+------------------------------
+BUTTONS:
 
-  2   vendor\laravel\framework\src\Illuminate\Database\Connectors\Connector.php:65
-      PDO::__construct("sqlsrv:Server=.,1433;Database=cidapi", "", "", [])
-
-
-C:\Users\ITDepartment\Documents\dev\cidapi>
+OK
+------------------------------
