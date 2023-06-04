@@ -1,33 +1,20 @@
-<template>
-  <!-- Existing code... -->
+   Illuminate\Database\QueryException
 
-  <!-- Deletion success message -->
-  <div class="alert sticky-note" v-if="deleteSuccessMessage">
-    {{ deleteSuccessMessage }}
-  </div>
+  could not find driver (Connection: sqlsrv, SQL: select * from sys.sysobjects where id = object_id(migrations) and xtype in ('U', 'V'))
 
-  <!-- Deletion confirmation modal -->
-  <!-- ... -->
-</template>
+  at vendor\laravel\framework\src\Illuminate\Database\Connection.php:795
+    791▕         // If an exception occurs when attempting to run a query, we'll format the error
+    792▕         // message to include the bindings with SQL, which will make this exception a
+    793▕         // lot more helpful to the developer instead of just the database's errors.
+    794▕         catch (Exception $e) {
+  ➜ 795▕             throw new QueryException(
+    796▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
+    797▕             );
+    798▕         }
+    799▕     }
 
-<style scoped>
-  /* Existing CSS... */
+  1   vendor\laravel\framework\src\Illuminate\Database\Connectors\Connector.php:65
+      PDOException::("could not find driver")
 
-  .sticky-note {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 200px;
-    background-color: #dff0d8;  /* Light green */
-    color: #3c763d;  /* Dark green */
-    border-color: #d6e9c6;  /* Slightly darker green */
-    border-radius: 4px;
-    padding: 10px;
-    z-index: 1000;  /* Make sure the note appears above other elements */
-    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);  /* Slightly darker shadow for depth */
-    transition: opacity 0.5s;  /* Fade out effect when note is removed */
-  }
-
-  /* Other existing CSS... */
-</style>
-
+  2   vendor\laravel\framework\src\Illuminate\Database\Connectors\Connector.php:65
+      PDO::__construct("dblib:host=127.0.0.1:1433;dbname=cidapi;charset=utf8", "root", "", [])
