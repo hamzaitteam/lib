@@ -1,2 +1,27 @@
-Msg 8156, Level 16, State 1, Procedure getAll, Line 11 [Batch Start Line 0]
-The column 'CIT_NO' was specified multiple times for 'Results'.
+ALTER PROCEDURE [dbo].[getAll]
+    @CardId int = NULL,
+    @FirstName nvarchar(50) = NULL,
+    @FatherName nvarchar(50) = NULL,
+    @GrandFatherName nvarchar(50) = NULL,
+    @FamilyName nvarchar(50) = NULL,
+    @PageSize int = 10,
+    @PageNumber int = 1
+AS
+BEGIN
+    WITH Results AS
+    (
+        SELECT ROW_NUMBER() OVER (ORDER BY i.INV_ISSUE_DATE DESC) AS RowNumber,
+               c.*, i.*, i.CIT_NO as INV_CIT_NO
+        FROM ctz c
+        FULL OUTER JOIN inv i ON c.CIT_NO = i.CIT_NO  
+        WHERE (@CardId IS NULL OR i.CIT_NO  = @CardId)
+        AND (@FirstName IS NULL OR c.CIT_FIRST  LIKE '%' + @FirstName + '%')
+        AND (@FatherName IS NULL OR c.CIT_FATHER  LIKE '%' + @FatherName + '%')
+        AND (@GrandFatherName IS NULL OR c.CIT_GRANDF  LIKE '%' + @GrandFatherName + '%')
+        AND (@FamilyName IS NULL OR c.CIT_FAMLY  LIKE '%' + @FamilyName + '%')
+    )
+    SELECT * 
+    FROM Results
+    WHERE RowNumber > (@PageNumber - 1) * @PageSize 
+    AND RowNumber <= @PageNumber * @PageSize
+END
