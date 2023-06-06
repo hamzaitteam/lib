@@ -1,68 +1,28 @@
-USE [cidapidb]
-GO
-/****** Object:  Table [dbo].[ctz]    Script Date: 6/6/2023 10:53:18 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[ctz](
-	[CIT_NO] [int] NULL,
-	[CIT_FIRST] [nvarchar](50) NULL,
-	[CIT_FATHER] [nvarchar](50) NULL,
-	[CIT_GRANDF] [nvarchar](50) NULL,
-	[CIT_FAMLY] [nvarchar](50) NULL,
-	[MOTHER] [nvarchar](50) NULL,
-	[BIRTH_DT] [date] NULL,
-	[CI_CITY] [nvarchar](50) NULL,
-	[STREET_ARB] [nvarchar](50) NULL,
-	[SEX_NO] [tinyint] NULL,
-	[MOBILE] [float] NULL,
-	[SEX_AR] [nvarchar](50) NULL
-) ON [PRIMARY]
-GO
-/****** Object:  Table [dbo].[inv]    Script Date: 6/6/2023 10:53:18 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE TABLE [dbo].[inv](
-	[CIT_NO] [int] NULL,
-	[INV_NO] [int] NULL,
-	[ACTION_NM] [nvarchar](50) NULL,
-	[RAT_NM] [nvarchar](max) NULL,
-	[ADJ_NM] [nvarchar](50) NULL,
-	[DEP_NM] [nvarchar](50) NULL,
-	[BRA_NM] [nvarchar](50) NULL,
-	[INV_ISSUE_DATE] [date] NULL,
-	[STA_NM] [nvarchar](50) NULL,
-	[INV_ESTDLAL1] [nvarchar](100) NULL,
-	[INV_ESTDLAL2] [nvarchar](100) NULL,
-	[INV_SUMMARY] [nvarchar](max) NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-/****** Object:  StoredProcedure [dbo].[getAll]    Script Date: 6/6/2023 10:53:18 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
 CREATE PROCEDURE [dbo].[getAll]
-@CardId int = null,
-@FirstName nvarchar(50) = null,
-@FatherName nvarchar(50) = null,
-@GrandFatherName nvarchar(50) = null,
-@FamilyName nvarchar(50) = null
-	 AS
+    @CardId int = NULL,
+    @FirstName nvarchar(50) = NULL,
+    @FatherName nvarchar(50) = NULL,
+    @GrandFatherName nvarchar(50) = NULL,
+    @FamilyName nvarchar(50) = NULL,
+    @PageSize int = 10,
+    @PageNumber int = 1
+AS
 BEGIN
-	 
- 
-    select * from ctz c full outer join inv i on c.CIT_NO = i.CIT_NO  
-	where ( @CardId is null or i.CIT_NO  = @CardId)
-	and ( @FirstName is null or c.CIT_FIRST  like '%' + @FirstName + '%')
-	and ( @FatherName is null or c.CIT_FATHER  like '%' + @FatherName + '%')
-	and ( @GrandFatherName is null or c.CIT_GRANDF  like '%' + @GrandFatherName + '%')
-	and ( @FamilyName is null or c.CIT_FAMLY  like '%' + @FamilyName + '%')
-	order by i.INV_ISSUE_DATE desc
-	;
+    WITH Results AS
+    (
+        SELECT ROW_NUMBER() OVER (ORDER BY i.INV_ISSUE_DATE DESC) AS RowNumber,
+               c.CIT_NO, c.CIT_FIRST, c.CIT_FATHER, c.CIT_GRANDF, c.CIT_FAMLY, c.MOTHER, c.BIRTH_DT, c.CI_CITY, c.STREET_ARB, c.SEX_NO, c.MOBILE, c.SEX_AR,
+               i.INV_NO, i.ACTION_NM, i.RAT_NM, i.ADJ_NM, i.DEP_NM, i.BRA_NM, i.INV_ISSUE_DATE, i.STA_NM, i.INV_ESTDLAL1, i.INV_ESTDLAL2, i.INV_SUMMARY
+        FROM ctz c
+        FULL OUTER JOIN inv i ON c.CIT_NO = i.CIT_NO  
+        WHERE (@CardId IS NULL OR i.CIT_NO  = @CardId)
+        AND (@FirstName IS NULL OR c.CIT_FIRST  LIKE '%' + @FirstName + '%')
+        AND (@FatherName IS NULL OR c.CIT_FATHER  LIKE '%' + @FatherName + '%')
+        AND (@GrandFatherName IS NULL OR c.CIT_GRANDF  LIKE '%' + @GrandFatherName + '%')
+        AND (@FamilyName IS NULL OR c.CIT_FAMLY  LIKE '%' + @FamilyName + '%')
+    )
+    SELECT * 
+    FROM Results
+    WHERE RowNumber > (@PageNumber - 1) * @PageSize 
+    AND RowNumber <= @PageNumber * @PageSize
 END
-GO
