@@ -1,28 +1,31 @@
-CREATE PROCEDURE [dbo].[getAll]
-    @CardId int = NULL,
-    @FirstName nvarchar(50) = NULL,
-    @FatherName nvarchar(50) = NULL,
-    @GrandFatherName nvarchar(50) = NULL,
-    @FamilyName nvarchar(50) = NULL,
-    @PageSize int = 10,
-    @PageNumber int = 1
-AS
-BEGIN
-    WITH Results AS
-    (
-        SELECT ROW_NUMBER() OVER (ORDER BY i.INV_ISSUE_DATE DESC) AS RowNumber,
-               c.CIT_NO, c.CIT_FIRST, c.CIT_FATHER, c.CIT_GRANDF, c.CIT_FAMLY, c.MOTHER, c.BIRTH_DT, c.CI_CITY, c.STREET_ARB, c.SEX_NO, c.MOBILE, c.SEX_AR,
-               i.INV_NO, i.ACTION_NM, i.RAT_NM, i.ADJ_NM, i.DEP_NM, i.BRA_NM, i.INV_ISSUE_DATE, i.STA_NM, i.INV_ESTDLAL1, i.INV_ESTDLAL2, i.INV_SUMMARY
-        FROM ctz c
-        FULL OUTER JOIN inv i ON c.CIT_NO = i.CIT_NO  
-        WHERE (@CardId IS NULL OR i.CIT_NO  = @CardId)
-        AND (@FirstName IS NULL OR c.CIT_FIRST  LIKE '%' + @FirstName + '%')
-        AND (@FatherName IS NULL OR c.CIT_FATHER  LIKE '%' + @FatherName + '%')
-        AND (@GrandFatherName IS NULL OR c.CIT_GRANDF  LIKE '%' + @GrandFatherName + '%')
-        AND (@FamilyName IS NULL OR c.CIT_FAMLY  LIKE '%' + @FamilyName + '%')
-    )
-    SELECT * 
-    FROM Results
-    WHERE RowNumber > (@PageNumber - 1) * @PageSize 
-    AND RowNumber <= @PageNumber * @PageSize
-END
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use DB;
+
+class DataController extends Controller
+{
+    public function getAllData(Request $request)
+    {
+        $cardId = $request->input('card_id');
+        $firstName = $request->input('first_name');
+        $fatherName = $request->input('father_name');
+        $grandFatherName = $request->input('grandfather_name');
+        $familyName = $request->input('family_name');
+        $pageSize = $request->input('page_size', 10);
+        $pageNumber = $request->input('page_number', 1);
+        
+        $results = DB::select("EXEC dbo.getAll @CardId = ?, @FirstName = ?, @FatherName = ?, @GrandFatherName = ?, @FamilyName = ?, @PageSize = ?, @PageNumber = ?",
+            [
+                $cardId, 
+                $firstName, 
+                $fatherName, 
+                $grandFatherName, 
+                $familyName,
+                $pageSize,
+                $pageNumber
+            ]);
+
+        return response()->json(['data' => $results], 200);
+    }
+}
