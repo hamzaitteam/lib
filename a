@@ -1,27 +1,27 @@
-USE [cidapidb]
-GO
-/****** Object:  StoredProcedure [dbo].[getAll]    Script Date: 6/6/2023 10:03:11 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-
 ALTER PROCEDURE [dbo].[getAll]
-@CardId int = null,
-@FirstName nvarchar(50) = null,
-@FatherName nvarchar(50) = null,
-@GrandFatherName nvarchar(50) = null,
-@FamilyName nvarchar(50) = null
-	 AS
+    @CardId int = NULL,
+    @FirstName nvarchar(50) = NULL,
+    @FatherName nvarchar(50) = NULL,
+    @GrandFatherName nvarchar(50) = NULL,
+    @FamilyName nvarchar(50) = NULL,
+    @PageSize int = 10,
+    @PageNumber int = 1
+AS
 BEGIN
-	 
- 
-    select * from ctz c full outer join inv i on c.CIT_NO = i.CIT_NO  
-	where ( @CardId is null or i.CIT_NO  = @CardId)
-	and ( @FirstName is null or c.CIT_FIRST  like '%' + @FirstName + '%')
-	and ( @FatherName is null or c.CIT_FATHER  like '%' + @FatherName + '%')
-	and ( @GrandFatherName is null or c.CIT_GRANDF  like '%' + @GrandFatherName + '%')
-	and ( @FamilyName is null or c.CIT_FAMLY  like '%' + @FamilyName + '%')
-	order by i.INV_ISSUE_DATE desc
-	;
+    WITH Results AS
+    (
+        SELECT ROW_NUMBER() OVER (ORDER BY i.INV_ISSUE_DATE DESC) AS RowNumber,
+               c.*, i.*
+        FROM ctz c
+        FULL OUTER JOIN inv i ON c.CIT_NO = i.CIT_NO  
+        WHERE (@CardId IS NULL OR i.CIT_NO  = @CardId)
+        AND (@FirstName IS NULL OR c.CIT_FIRST  LIKE '%' + @FirstName + '%')
+        AND (@FatherName IS NULL OR c.CIT_FATHER  LIKE '%' + @FatherName + '%')
+        AND (@GrandFatherName IS NULL OR c.CIT_GRANDF  LIKE '%' + @GrandFatherName + '%')
+        AND (@FamilyName IS NULL OR c.CIT_FAMLY  LIKE '%' + @FamilyName + '%')
+    )
+    SELECT * 
+    FROM Results
+    WHERE RowNumber > (@PageNumber - 1) * @PageSize 
+    AND RowNumber <= @PageNumber * @PageSize
 END
