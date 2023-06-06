@@ -1,15 +1,27 @@
-TITLE: SQL Server Import and Export Wizard
-------------------------------
+USE [cidapidb]
+GO
+/****** Object:  StoredProcedure [dbo].[getAll]    Script Date: 6/6/2023 10:03:11 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 
-The operation could not be completed.
-
-------------------------------
-ADDITIONAL INFORMATION:
-
-The 'Microsoft.ACE.OLEDB.16.0' provider is not registered on the local machine. (System.Data)
-
-------------------------------
-BUTTONS:
-
-OK
-------------------------------
+ALTER PROCEDURE [dbo].[getAll]
+@CardId int = null,
+@FirstName nvarchar(50) = null,
+@FatherName nvarchar(50) = null,
+@GrandFatherName nvarchar(50) = null,
+@FamilyName nvarchar(50) = null
+	 AS
+BEGIN
+	 
+ 
+    select * from ctz c full outer join inv i on c.CIT_NO = i.CIT_NO  
+	where ( @CardId is null or i.CIT_NO  = @CardId)
+	and ( @FirstName is null or c.CIT_FIRST  like '%' + @FirstName + '%')
+	and ( @FatherName is null or c.CIT_FATHER  like '%' + @FatherName + '%')
+	and ( @GrandFatherName is null or c.CIT_GRANDF  like '%' + @GrandFatherName + '%')
+	and ( @FamilyName is null or c.CIT_FAMLY  like '%' + @FamilyName + '%')
+	order by i.INV_ISSUE_DATE desc
+	;
+END
