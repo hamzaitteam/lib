@@ -1,31 +1,5 @@
-namespace App\Http\Controllers;
+GET http://localhost:8000/api/data?page_size=10&page_number=1
+GET http://localhost:8000/api/data?card_id=123&page_size=10&page_number=1
 
-use Illuminate\Http\Request;
-use DB;
+GET http://localhost:8000/api/data?first_name=John&father_name=Smith&page_size=10&page_number=1
 
-class DataController extends Controller
-{
-    public function getAllData(Request $request)
-    {
-        $cardId = $request->input('card_id');
-        $firstName = $request->input('first_name');
-        $fatherName = $request->input('father_name');
-        $grandFatherName = $request->input('grandfather_name');
-        $familyName = $request->input('family_name');
-        $pageSize = $request->input('page_size', 10);
-        $pageNumber = $request->input('page_number', 1);
-        
-        $results = DB::select("EXEC dbo.getAll @CardId = ?, @FirstName = ?, @FatherName = ?, @GrandFatherName = ?, @FamilyName = ?, @PageSize = ?, @PageNumber = ?",
-            [
-                $cardId, 
-                $firstName, 
-                $fatherName, 
-                $grandFatherName, 
-                $familyName,
-                $pageSize,
-                $pageNumber
-            ]);
-
-        return response()->json(['data' => $results], 200);
-    }
-}
