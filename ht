@@ -1,66 +1,23 @@
-<template>
-    ...
-</template>
+ <section id="multilingual-datatable">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h4 class="card-title">عرض النتائج</h4>
+                    </div>
+                    <div class="card-datatable">
+                        <b-table :items="paginatedData" :fields="fields" responsive="sm"></b-table>
 
-<script>
-import axios from 'axios';
+                        <b-pagination
+                            v-model="currentPage"
+                            :total-rows="rows"
+                            :per-page="perPage"
+                            aria-controls="my-table"
+                            @change="handlePageChange"
+                        ></b-pagination>
 
-export default {
-    data() {
-        return {
-            searchResults: [],
-            currentPage: 1,
-            perPage: 7,
-            rows: 0,
-            fields: [
-                // same as before...
-            ],
-            cardId: "",
-            firstName: "",
-            fatherName: "",
-            grandfatherName: "",
-            familyName: "",
-        }
-    },
-    computed: {
-        // same as before...
-    },
-    methods: {
-        async submitForm() {
-            if (!this.cardId && (!this.firstName || !this.familyName)) {
-                alert('Please enter either a card ID or both a first name and a family name.');
-                return;
-            }
-
-            try {
-                const response = await axios.get('YOUR_API_URL', {
-                    params: {
-                        card_id: this.cardId,
-                        first_name: this.firstName,
-                        father_name: this.fatherName,
-                        grandfather_name: this.grandfatherName,
-                        family_name: this.familyName,
-                        page_size: this.perPage,
-                        page_number: this.currentPage
-                    }
-                });
-
-                if(response.data && response.data.data) {
-                    this.searchResults = response.data.data.map(item => {
-                        // same as before...
-                    });
-                    // remove this.rows = this.searchResults.length;
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        async handlePageChange() {
-            // Add any side effects that should occur when the page changes
-            // Then perform the search again to fetch the new page
-            this.submitForm();
-        },
-        // same as before...
-    }
-};
-</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
