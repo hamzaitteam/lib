@@ -1,188 +1,32 @@
-<script>
-export default {
-  name: "App",
-  data() {
-    return {
-      idNumber: "",
-      firstName: "",
-      fatherName: "",
-      grandfatherName: "",
-      lastName: ""
-    };
-  },
-  methods: {
-    submitForm() {
-      // Here, you can access the form data from your Vue instance's data properties
-      console.log(this.idNumber, this.firstName, this.fatherName, this.grandfatherName, this.lastName);
-      // Perform your search here
-    },
-    clearInput() {
-      this.idNumber = '';
-      this.firstName = '';
-      this.fatherName = '';
-      this.grandfatherName = '';
-      this.lastName = '';
-    }
-  }
-};
-</script>
-<template>
-  <section class="tooltip-validations" id="tooltip-validation">
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">بحث السجل المدني</h4>
-          </div>
-          <div class="card-body">
-            <form @submit.prevent="submitForm">
-              <div class="form-row" style="margin-right: 3%;">
-                <div class="col-md-4 col-12 mb-3">
-                  <label for="validationTooltip03">رقم الهوية</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="validationTooltip02"
-                      placeholder="رقم الهوية" v-model="idNumber">
-                    <div class="input-group-append" id="button-addon2">
-                      <button class="btn btn-outline-primary waves-effect" type="button">
-                        <!-- Your SVG Here -->
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4 col-12 mb-3">
-                  <label for="">الاسم كامل </label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder=" الاسم الاول" v-model="firstName">
-                    <input type="text" class="form-control" placeholder=" اسم الاب" v-model="fatherName">
-                    <input type="text" class="form-control" placeholder=" اسم الجد " v-model="grandfatherName">
-                    <input type="text" class="form-control" placeholder=" اسم العائلة " v-model="lastName">
-                  </div>
-                </div>
-
-                <div class="col-md-4 col-12  mb-3 demo-inline-spacing">
-                  <button id="type-warning" class="btn btn-primary" style="margin-top: 24px;" type="submit">
-                    بحث 
-                    <!-- Your SVG Here -->
-                  </button>
-
-                  <button type="button" class="btn btn-secondary waves-effect waves-float waves-light" @click="clearInput">
-                    تنظيف   
-                    <i class="fas fa-times clear-icon"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</template>
-
-<script>
-export default {
-  name: "App",
-  data() {
-    return {
-      idNumber: "",
-      firstName: "",
-      fatherName: "",
-      grandfatherName: "",
-      lastName: ""
-    };
-  },
-  methods: {
-    submitForm() {
-      console.log(this.idNumber, this.firstName, this.fatherName, this.grandfatherName, this.lastName);
-    },
-    clearInput() {
-      this.idNumber = '';
-      this.firstName = '';
-      this.fatherName = '';
-      this.grandfatherName = '';
-      this.lastName = '';
-    }
-  }
-};
-</script>
-<template>
-  <section class="tooltip-validations" id="tooltip-validation">
-    <div class="row">
-      <div class="col-12">
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">بحث السجل المدني</h4>
-          </div>
-          <div class="card-body">
-            <form @submit.prevent="submitForm">
-              <div class="form-row" style="margin-right: 3%;">
-                <div class="col-md-4 col-12 mb-3">
-                  <label for="validationTooltip03">رقم الهوية</label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" id="validationTooltip02"
-                      placeholder="رقم الهوية" v-model="idNumber">
-                    <div class="input-group-append" id="button-addon2">
-                      <button class="btn btn-outline-primary waves-effect" type="button">
-                        <!-- Your SVG Here -->
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-4 col-12 mb-3">
-                  <label for="">الاسم كامل </label>
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder=" الاسم الاول" v-model="firstName">
-                    <input type="text" class="form-control" placeholder=" اسم الاب" v-model="fatherName">
-                    <input type="text" class="form-control" placeholder=" اسم الجد " v-model="grandfatherName">
-                    <input type="text" class="form-control" placeholder=" اسم العائلة " v-model="lastName">
-                  </div>
-                </div>
-
-                <div class="col-md-4 col-12  mb-3 demo-inline-spacing">
-                  <button id="type-warning" class="btn btn-primary" style="margin-top: 24px;" type="submit">
-                    بحث 
-                    <!-- Your SVG Here -->
-                  </button>
-
-                  <button type="button" class="btn btn-secondary waves-effect waves-float waves-light" @click="clearInput">
-                    تنظيف   
-                    <i class="fas fa-times clear-icon"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-</template>
-
-<script>
-export default {
-  name: "App",
-  data() {
-    return {
-      idNumber: "",
-      firstName: "",
-      fatherName: "",
-      grandfatherName: "",
-      lastName: ""
-    };
-  },
-  methods: {
-    submitForm() {
-      console.log(this.idNumber, this.firstName, this.fatherName, this.grandfatherName, this.lastName);
-    },
-    clearInput() {
-      this.idNumber = '';
-      this.firstName = '';
-      this.fatherName = '';
-      this.grandfatherName = '';
-      this.lastName = '';
-    }
-  }
-};
-</script>
+{
+    "data": [
+        {
+            "RowNumber": "1",
+            "CIT_NO": "",
+            "CIT_FIRST": "",
+            "CIT_FATHER": "",
+            "CIT_GRANDF": "",
+            "CIT_FAMLY": "",
+            "MOTHER": "",
+            "BIRTH_DT": "",
+            "CI_CITY": "",
+            "STREET_ARB": "",
+            "SEX_NO": "1",
+            "MOBILE": "",
+            "SEX_AR": "ذكر",
+            "INV_NO": "265421",
+            "ACTION_NM": "",
+            "RAT_NM": "",
+            "ADJ_NM": "",
+            "DEP_NM": "",
+            "BRA_NM": "",
+            "INV_ISSUE_DATE": "",
+            "STA_NM": "",
+            "INV_ESTDLAL1": "1395",
+            "INV_ESTDLAL2": "2022",
+            "INV_SUMMARY": ""
+        },
+        
+       
+    ]
+}
