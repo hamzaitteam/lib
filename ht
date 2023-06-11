@@ -1,110 +1,109 @@
+<template>
+    <section id="multilingual-datatable">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header border-bottom">
+                        <h4 class="card-title">عرض النتائج</h4>
+                    </div>
+                    <div class="card-datatable">
+                        <b-table :items="paginatedData" :fields="fields" responsive="sm"></b-table>
 
-            <section id="multilingual-datatable">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-header border-bottom">
-                                <h4 class="card-title">عرض النتائج</h4>
-                            </div>
-                            <div class="card-datatable">
-                                <div id="DataTables_Table_3_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="d-flex justify-content-between align-items-center mx-0 row">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="dataTables_length" id="DataTables_Table_3_length"><label>Show
-                                                    <select name="DataTables_Table_3_length"
-                                                        aria-controls="DataTables_Table_3"
-                                                        class="custom-select form-control">
-                                                        <option value="7">7</option>
-                                                        <option value="10">10</option>
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="75">75</option>
-                                                        <option value="100">100</option>
-                                                    </select> entries</label></div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6">
-                                            <div id="DataTables_Table_3_filter" class="dataTables_filter">
-                                                <label>Search:<input type="search" class="form-control" placeholder=""
-                                                        aria-controls="DataTables_Table_3"></label></div>
-                                        </div>
-                                    </div>
-                                    <table class="dt-multilingual table dataTable no-footer dtr-column"
-                                        id="DataTables_Table_3" role="grid" aria-describedby="DataTables_Table_3_info">
-                                        <thead>
-                                            <tr role="row">
-                                                <th  > رقم القضية </th>
+                        <b-pagination
+                            v-model="currentPage"
+                            :total-rows="rows"
+                            :per-page="perPage"
+                            aria-controls="my-table"
+                            @change="handlePageChange"
+                        ></b-pagination>
 
-                                                <th style=" text-align: center;     ">رقم الهوية</th>
-                                                <th style=" text-align: center;     ">الاسم </th>
-
-                                                <th style=" text-align: center;     ">حالة الشخص </th>
-
-                                                <th style=" text-align: center;     ">نوع القضية </th>
-                                                <th style=" text-align: center;     ">تاريخ القضية </th>
-
-
-                                                <th style=" text-align: center;     ">رقم جوال </th>
-
-                                                <th style=" text-align: center;     "> التفاصيل </th>
-
-
- 
-
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr class="odd">
-                                                <td> <strong>5638</strong>   </td>
-
-                                                <td class="dataTables_empty" valign="top"> <div class="badge badge-light-primary">406044479</div></td>
-                                                <td class="dataTables_empty" valign="top">فادي علون</td>
-                                                <td class="dataTables_empty" valign="top"> استكمال قانونية</td>
-                                                <td class="dataTables_empty" valign="top"> <div class="badge badge-light-danger">سرقة</div></td>
-                                                <td class="dataTables_empty" valign="top">  2020/05/3</td>
-
-                                                <td class="dataTables_empty" valign="top">  05992712537</td>
-                                                <td class="dataTables_empty" valign="top">             <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#large">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file-text"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg> بيانات القضية
-                                                </button></td>
-
-
-                          
-                                                
-
-
-
-
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div class="d-flex justify-content-between mx-0 row">
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="dataTables_info" id="DataTables_Table_3_info" role="status"
-                                                aria-live="polite">Showing 0 to 0 of 0 entries</div>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6">
-                                            <div class="dataTables_paginate paging_simple_numbers"
-                                                id="DataTables_Table_3_paginate">
-                                                <ul class="pagination">
-                                                    <li class="paginate_button page-item previous disabled"
-                                                        id="DataTables_Table_3_previous"><a href="#"
-                                                            aria-controls="DataTables_Table_3" data-dt-idx="0"
-                                                            tabindex="0" class="page-link">&nbsp;</a></li>
-                                                    <li class="paginate_button page-item next disabled"
-                                                        id="DataTables_Table_3_next"><a href="#"
-                                                            aria-controls="DataTables_Table_3" data-dt-idx="1"
-                                                            tabindex="0" class="page-link">&nbsp;</a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
+        </div>
+    </section>
+</template>
 
+<script>
+import axios from 'axios';
 
+export default {
+    data() {
+        return {
+            searchResults: [],
+            currentPage: 1,
+            perPage: 7,
+            rows: 0,
+            fields: [
+                {key: 'INV_NO', label: 'رقم القضية'},
+                {key: 'CIT_NO', label: 'رقم الهوية'},
+                {key: 'fullName', label: 'الاسم'},
+                {key: 'STA_NM', label: 'حالة الشخص'},
+                {key: 'ACTION_NM', label: 'نوع القضية'},
+                {key: 'INV_ISSUE_DATE', label: 'تاريخ القضية'},
+                {key: 'MOBILE', label: 'رقم جوال'},
+                {key: 'details', label: 'التفاصيل'},
+            ],
+            idNumber: "",
+            firstName: "",
+            fatherName: "",
+            grandfatherName: "",
+            lastName: "",
+        }
+    },
+    computed: {
+        paginatedData() {
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + this.perPage;
+            return this.searchResults.slice(start, end);
+        }
+    },
+    methods: {
+        async submitForm() {
+            if (!this.idNumber && (!this.firstName || !this.lastName)) {
+                alert('Please enter either an ID number or both a first name and a family name.');
+                return;
+            }
+
+            try {
+                const response = await axios.get('YOUR_API_URL', {
+                    params: {
+                        idNumber: this.idNumber,
+                        firstName: this.firstName,
+                        fatherName: this.fatherName,
+                        grandfatherName: this.grandfatherName,
+                        lastName: this.lastName
+                    }
+                });
+
+                if(response.data && response.data.data) {
+                    this.searchResults = response.data.data.map(item => {
+                        return {
+                            ...item,
+                            fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
+                            details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
+                        };
+                    });
+                    this.rows = this.searchResults.length;
+                    this.currentPage = 1;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        handlePageChange() {
+            // Add any side effects that should occur when the page changes
+        },
+        clearInput() {
+            this.idNumber = '';
+            this.firstName = '';
+            this.fatherName = '';
+            this.grandfatherName = '';
+            this.lastName = '';
+            this.searchResults = [];
+            this.currentPage = 1;
+            this.rows = 0;
+        }
+    }
+};
+</script>
