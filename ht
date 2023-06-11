@@ -1,4 +1,16 @@
 methods: {
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+            this.submitForm(); // fetch new data for the next page
+        }
+    },
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            this.submitForm(); // fetch new data for the previous page
+        }
+    },
     async submitForm() {
         try {
             const response = await axios.get('http://127.0.0.1:8000/api/data', {
@@ -21,7 +33,8 @@ methods: {
                         details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
                     };
                 });
-                this.rows = response.data.total; // assuming server returns total number of records
+                // assuming server returns total number of records
+                this.rows = response.data.total ? response.data.total : this.searchResults.length; 
             }
         } catch (error) {
             console.error(error);
@@ -29,27 +42,3 @@ methods: {
     },
     // Other methods...
 },
-computed: {
-    totalPages() {
-        return Math.ceil(this.rows / this.perPage);
-    }
-    // Other computed properties...
-}
-
-
-
-methods: {
-    nextPage() {
-        if (this.currentPage < this.totalPages) {
-            this.currentPage++;
-            this.submitForm();
-        }
-    },
-    previousPage() {
-        if (this.currentPage > 1) {
-            this.currentPage--;
-            this.submitForm();
-        }
-    },
-    // Other methods...
-}
