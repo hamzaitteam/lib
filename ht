@@ -1,102 +1,188 @@
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      idNumber: "",
+      firstName: "",
+      fatherName: "",
+      grandfatherName: "",
+      lastName: ""
+    };
+  },
+  methods: {
+    submitForm() {
+      // Here, you can access the form data from your Vue instance's data properties
+      console.log(this.idNumber, this.firstName, this.fatherName, this.grandfatherName, this.lastName);
+      // Perform your search here
+    },
+    clearInput() {
+      this.idNumber = '';
+      this.firstName = '';
+      this.fatherName = '';
+      this.grandfatherName = '';
+      this.lastName = '';
+    }
+  }
+};
+</script>
+<template>
   <section class="tooltip-validations" id="tooltip-validation">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h4 class="card-title">بحث السجل المدني</h4>
-                                </div>
-                                <div class="card-body">
-
-                                    <form class="" >
-                                        <div class="form-row" style="    margin-right: 3%;                                        ">
-
-
-                                            <div class="col-md-4 col-12 mb-3">
-
-
-
-                                                <label for="validationTooltip03">رقم الهوية</label>
-
-                                                <div class="input-group">
-
-                                                    <input type="text" class="form-control" id="validationTooltip02"
-                                                        placeholder="رقم الهوية"  >
-                                      
-
-
-                                                    <div class="input-group-append" id="button-addon2">
-                                                        <button class="btn btn-outline-primary waves-effect"
-                                                            type="button">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="14"
-                                                                height="14" viewBox="0 0 24 24" fill="none"
-                                                                stroke="currentColor" stroke-width="2"
-                                                                stroke-linecap="round" stroke-linejoin="round"
-                                                                class="feather feather-search">
-                                                                <circle cx="11" cy="11" r="8"></circle>
-                                                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                                            </svg>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-md-4 col-12 mb-3">
-
-
-
-                                                <label for="">الاسم كامل </label>
-
-                                                <div class="input-group">
-
-                                                    <input type="text" class="form-control"  
-                                                        placeholder=" الاسم الاول"  >
-                         
-
-                                                    <input type="text" class="form-control" id=" "
-                                                        placeholder=" اسم الاب" value="Otto" >
-
-                                                    <input type="text" class="form-control" id=" "
-                                                        placeholder=" اسم الجد " value="Otto"  >
-
-
-                                                    <input type="text" class="form-control" id=" "
-                                                        placeholder=" اسم العائلة " value="Otto"  >
-
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-md-4 col-12  mb-3 demo-inline-spacing">
-
-
-                                                <button id="type-warning" class="btn btn-primary"
-                                                    style="    margin-top: 24px;"  type="submit"
-                                                    onclick="submitForm(event)">بحث <svg
-                                                        xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                        viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                                        class="feather feather-search">
-                                                        <circle cx="11" cy="11" r="8"></circle>
-                                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                                                    </svg>
-                                                </button>
-
-
-                                                <button type="button"
-                                                    class="btn btn-secondary waves-effect waves-float waves-light" onclick="clear_input()">تنظيف   <i class="fas fa-times clear-icon"></i>
-
-                                                </button>
-
-
-
-
-                                            </div>
-                                        </div>
-                                    </form>
-
-                                </div>
-                            </div>
-                        </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">بحث السجل المدني</h4>
+          </div>
+          <div class="card-body">
+            <form @submit.prevent="submitForm">
+              <div class="form-row" style="margin-right: 3%;">
+                <div class="col-md-4 col-12 mb-3">
+                  <label for="validationTooltip03">رقم الهوية</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="validationTooltip02"
+                      placeholder="رقم الهوية" v-model="idNumber">
+                    <div class="input-group-append" id="button-addon2">
+                      <button class="btn btn-outline-primary waves-effect" type="button">
+                        <!-- Your SVG Here -->
+                      </button>
                     </div>
-               </section>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-12 mb-3">
+                  <label for="">الاسم كامل </label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder=" الاسم الاول" v-model="firstName">
+                    <input type="text" class="form-control" placeholder=" اسم الاب" v-model="fatherName">
+                    <input type="text" class="form-control" placeholder=" اسم الجد " v-model="grandfatherName">
+                    <input type="text" class="form-control" placeholder=" اسم العائلة " v-model="lastName">
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-12  mb-3 demo-inline-spacing">
+                  <button id="type-warning" class="btn btn-primary" style="margin-top: 24px;" type="submit">
+                    بحث 
+                    <!-- Your SVG Here -->
+                  </button>
+
+                  <button type="button" class="btn btn-secondary waves-effect waves-float waves-light" @click="clearInput">
+                    تنظيف   
+                    <i class="fas fa-times clear-icon"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      idNumber: "",
+      firstName: "",
+      fatherName: "",
+      grandfatherName: "",
+      lastName: ""
+    };
+  },
+  methods: {
+    submitForm() {
+      console.log(this.idNumber, this.firstName, this.fatherName, this.grandfatherName, this.lastName);
+    },
+    clearInput() {
+      this.idNumber = '';
+      this.firstName = '';
+      this.fatherName = '';
+      this.grandfatherName = '';
+      this.lastName = '';
+    }
+  }
+};
+</script>
+<template>
+  <section class="tooltip-validations" id="tooltip-validation">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="card-title">بحث السجل المدني</h4>
+          </div>
+          <div class="card-body">
+            <form @submit.prevent="submitForm">
+              <div class="form-row" style="margin-right: 3%;">
+                <div class="col-md-4 col-12 mb-3">
+                  <label for="validationTooltip03">رقم الهوية</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="validationTooltip02"
+                      placeholder="رقم الهوية" v-model="idNumber">
+                    <div class="input-group-append" id="button-addon2">
+                      <button class="btn btn-outline-primary waves-effect" type="button">
+                        <!-- Your SVG Here -->
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-12 mb-3">
+                  <label for="">الاسم كامل </label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" placeholder=" الاسم الاول" v-model="firstName">
+                    <input type="text" class="form-control" placeholder=" اسم الاب" v-model="fatherName">
+                    <input type="text" class="form-control" placeholder=" اسم الجد " v-model="grandfatherName">
+                    <input type="text" class="form-control" placeholder=" اسم العائلة " v-model="lastName">
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-12  mb-3 demo-inline-spacing">
+                  <button id="type-warning" class="btn btn-primary" style="margin-top: 24px;" type="submit">
+                    بحث 
+                    <!-- Your SVG Here -->
+                  </button>
+
+                  <button type="button" class="btn btn-secondary waves-effect waves-float waves-light" @click="clearInput">
+                    تنظيف   
+                    <i class="fas fa-times clear-icon"></i>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
+<script>
+export default {
+  name: "App",
+  data() {
+    return {
+      idNumber: "",
+      firstName: "",
+      fatherName: "",
+      grandfatherName: "",
+      lastName: ""
+    };
+  },
+  methods: {
+    submitForm() {
+      console.log(this.idNumber, this.firstName, this.fatherName, this.grandfatherName, this.lastName);
+    },
+    clearInput() {
+      this.idNumber = '';
+      this.firstName = '';
+      this.fatherName = '';
+      this.grandfatherName = '';
+      this.lastName = '';
+    }
+  }
+};
+</script>
