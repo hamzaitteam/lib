@@ -1,19 +1,19 @@
-computed: {
-    paginatedData() {
-        const start = (this.currentPage - 1) * this.perPage;
-        const end = start + this.perPage;
-        return this.searchResults.slice(start, end);
+methods: {
+    // Other methods...
+    nextPage() {
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+        }
     },
-    totalPages() {
-        return Math.ceil(this.searchResults.length / this.perPage);
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
     }
 }
-<tbody>
-    <tr v-for="(result, index) in paginatedData" :key="index">
-        <!-- row content... -->
-    </tr>
-</tbody>
-<div>
+    <div>
+    <button @click="previousPage">Previous</button>
+
     <button
         v-for="n in totalPages"
         :key="n"
@@ -22,8 +22,6 @@ computed: {
     >
         {{ n }}
     </button>
+
+    <button @click="nextPage">Next</button>
 </div>
-button.is-active {
-    background-color: #007bff;
-    color: white;
-}
