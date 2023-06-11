@@ -1,33 +1,66 @@
-<?php
+<template>
+    ...
+</template>
 
-namespace App\Http\Controllers;
+<script>
+import axios from 'axios';
 
-use Illuminate\Http\Request;
-use DB;
+export default {
+    data() {
+        return {
+            searchResults: [],
+            currentPage: 1,
+            perPage: 7,
+            rows: 0,
+            fields: [
+                // same as before...
+            ],
+            cardId: "",
+            firstName: "",
+            fatherName: "",
+            grandfatherName: "",
+            familyName: "",
+        }
+    },
+    computed: {
+        // same as before...
+    },
+    methods: {
+        async submitForm() {
+            if (!this.cardId && (!this.firstName || !this.familyName)) {
+                alert('Please enter either a card ID or both a first name and a family name.');
+                return;
+            }
 
-class DataController extends Controller
-{
-    public  function getData(Request $request)
-    {
-        $cardId = $request->input('card_id');
-        $firstName = $request->input('first_name');
-        $fatherName = $request->input('father_name');
-        $grandFatherName = $request->input('grandfather_name');
-        $familyName = $request->input('family_name');
-        $pageSize = $request->input('page_size', 10);
-        $pageNumber = $request->input('page_number', 1);
+            try {
+                const response = await axios.get('YOUR_API_URL', {
+                    params: {
+                        card_id: this.cardId,
+                        first_name: this.firstName,
+                        father_name: this.fatherName,
+                        grandfather_name: this.grandfatherName,
+                        family_name: this.familyName,
+                        page_size: this.perPage,
+                        page_number: this.currentPage
+                    }
+                });
 
-        $results = DB::select("EXEC dbo.getAll @CardId = ?, @FirstName = ?, @FatherName = ?, @GrandFatherName = ?, @FamilyName = ?, @PageSize = ?, @PageNumber = ?",
-            [
-                $cardId,
-                $firstName,
-                $fatherName,
-                $grandFatherName,
-                $familyName,
-                $pageSize,
-                $pageNumber
-            ]);
-
-        return response()->json(['data' => $results], 200);
+                if(response.data && response.data.data) {
+                    this.searchResults = response.data.data.map(item => {
+                        // same as before...
+                    });
+                    // remove this.rows = this.searchResults.length;
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        async handlePageChange() {
+            // Add any side effects that should occur when the page changes
+            // Then perform the search again to fetch the new page
+            this.submitForm();
+        },
+        // same as before...
     }
-}
+};
+</script>
