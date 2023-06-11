@@ -1,1 +1,38 @@
-            <button class="btn btn-primary" data-toggle="modal" data-target="#large" @click="setCurrentResult(result)">عرض التفاصيل</button>
+    <div class="card-datatable">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                 <th style="text-align: center;">رقم الهوية</th>
+                                <th style="text-align: center;">الاسم الاول </th>
+                                <th style="text-align: center;">الأب   </th>
+                                <th style="text-align: center;">  الجد </th>
+                                <th style="text-align: center;">  العائلة </th>
+                                <th style="text-align: center;">رقم هاتف </th>
+                                <th style="text-align: center;">  تاريخ الميلاد </th>
+                                 <th style="text-align: center;">اجراء   </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(result, index) in searchResults" :key="index">
+                                <td>{{ result.CIT_NO }}</td>
+                                <td>{{ result.CIT_FIRST }}</td>
+                                <td>{{ result.CIT_FATHER }}</td>
+                                <td>{{ result.CIT_GRANDF }}</td>
+                                <td>{{ result.CIT_FAMLY }}</td>
+                                <td>{{ result.MOBILE }}</td>
+                                <td>{{ result.BIRTH_DT }}</td>
+                                <!-- <td>{{ result.INV_SUMMARY }}</td> -->
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#large" @click="setCurrentResult(result)">عرض التفاصيل</button>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <b-pagination
+                        v-model="currentPage"
+                        :total-rows="rows"
+                        :per-page="perPage"
+                        aria-controls="my-table"
+                        @change="handlePageChange"
+                    ></b-pagination>
+                </div>
