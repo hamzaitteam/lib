@@ -1,27 +1,104 @@
-methods: {
-    // Other methods...
-    nextPage() {
+<script>
+import axios from 'axios';
+
+export default {
+    data() {
+        return {
+            searchResults: [],
+            currentPage: 1,
+            perPage: 7,
+            rows: 0,
+            fields: [
+                {key: 'INV_NO', label: 'رقم القضية'},
+                {key: 'CIT_NO', label: 'رقم الهوية'},
+                {key: 'fullName', label: 'الاسم'},
+                {key: 'STA_NM', label: 'حالة الشخص'},
+                {key: 'ACTION_NM', label: 'نوع القضية'},
+                {key: 'INV_ISSUE_DATE', label: 'تاريخ القضية'},
+                {key: 'MOBILE', label: 'رقم جوال'},
+                {key: 'details', label: 'التفاصيل'},
+            ],
+            cardId: "",
+            firstName: "",
+            fatherName: "",
+            grandfatherName: "",
+            familyName: "",
+        }
+    },
+    computed: {
+        paginatedData() {
+        const start = (this.currentPage - 1) * this.perPage;
+        const end = start + this.perPage;
+        return this.searchResults.slice(start, end);
+    },
+    totalPages() {
+        return Math.ceil(this.searchResults.length / this.perPage);
+    }
+    },
+    methods: {
+        nextPage() {
         if (this.currentPage < this.totalPages) {
+            console.log(this.currentPage);
             this.currentPage++;
+            console.log(this.currentPage);
+
         }
     },
     previousPage() {
         if (this.currentPage > 1) {
             this.currentPage--;
         }
+    },
+        async submitForm() {
+            // if (!this.cardId && (!this.firstName || !this.familyName)) {
+            //     alert('Please enter either a card ID or both a first name and a family name.');
+            //     return;
+            // }
+
+            try {
+                const response = await axios.get('http://127.0.0.1:8000/api/data', {
+                    params: {
+                        "card_id": this.cardId,
+                        "first_name": this.firstName,
+                        "father_name": this.fatherName,
+                        "grandfather_name": this.grandfatherName,
+                        "family_name": this.familyName,
+                        "page_size": this.perPage,
+                        "page_number": this.currentPage
+                    }
+                });
+
+                if(response.data && response.data.data) {
+                    this.searchResults = response.data.data.map(item => {
+                        return {
+                            ...item,
+                            fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
+                            details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
+                        };
+                    });
+                    // this.rows = this.searchResults.length;
+                    // this.currentPage = 1;
+
+                    console.log(this.searchResults);
+
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        },
+        handlePageChange() {
+            this.submitForm();
+        },
+        clearInput() {
+            this.idNumber = '';
+            this.firstName = '';
+            this.fatherName = '';
+            this.grandfatherName = '';
+            this.lastName = '';
+            this.searchResults = [];
+            this.currentPage = 1;
+            this.rows = 0;
+        }
     }
-}
-    <div>
-    <button @click="previousPage">Previous</button>
-
-    <button
-        v-for="n in totalPages"
-        :key="n"
-        @click="currentPage = n"
-        :class="{ 'is-active': n === currentPage }"
-    >
-        {{ n }}
-    </button>
-
-    <button @click="nextPage">Next</button>
-</div>
+};
+</script>
