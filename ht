@@ -1,109 +1,33 @@
-<template>
-    <section id="multilingual-datatable">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header border-bottom">
-                        <h4 class="card-title">عرض النتائج</h4>
-                    </div>
-                    <div class="card-datatable">
-                        <b-table :items="paginatedData" :fields="fields" responsive="sm"></b-table>
+<?php
 
-                        <b-pagination
-                            v-model="currentPage"
-                            :total-rows="rows"
-                            :per-page="perPage"
-                            aria-controls="my-table"
-                            @change="handlePageChange"
-                        ></b-pagination>
+namespace App\Http\Controllers;
 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
+use Illuminate\Http\Request;
+use DB;
 
-<script>
-import axios from 'axios';
+class DataController extends Controller
+{
+    public  function getData(Request $request)
+    {
+        $cardId = $request->input('card_id');
+        $firstName = $request->input('first_name');
+        $fatherName = $request->input('father_name');
+        $grandFatherName = $request->input('grandfather_name');
+        $familyName = $request->input('family_name');
+        $pageSize = $request->input('page_size', 10);
+        $pageNumber = $request->input('page_number', 1);
 
-export default {
-    data() {
-        return {
-            searchResults: [],
-            currentPage: 1,
-            perPage: 7,
-            rows: 0,
-            fields: [
-                {key: 'INV_NO', label: 'رقم القضية'},
-                {key: 'CIT_NO', label: 'رقم الهوية'},
-                {key: 'fullName', label: 'الاسم'},
-                {key: 'STA_NM', label: 'حالة الشخص'},
-                {key: 'ACTION_NM', label: 'نوع القضية'},
-                {key: 'INV_ISSUE_DATE', label: 'تاريخ القضية'},
-                {key: 'MOBILE', label: 'رقم جوال'},
-                {key: 'details', label: 'التفاصيل'},
-            ],
-            idNumber: "",
-            firstName: "",
-            fatherName: "",
-            grandfatherName: "",
-            lastName: "",
-        }
-    },
-    computed: {
-        paginatedData() {
-            const start = (this.currentPage - 1) * this.perPage;
-            const end = start + this.perPage;
-            return this.searchResults.slice(start, end);
-        }
-    },
-    methods: {
-        async submitForm() {
-            if (!this.idNumber && (!this.firstName || !this.lastName)) {
-                alert('Please enter either an ID number or both a first name and a family name.');
-                return;
-            }
+        $results = DB::select("EXEC dbo.getAll @CardId = ?, @FirstName = ?, @FatherName = ?, @GrandFatherName = ?, @FamilyName = ?, @PageSize = ?, @PageNumber = ?",
+            [
+                $cardId,
+                $firstName,
+                $fatherName,
+                $grandFatherName,
+                $familyName,
+                $pageSize,
+                $pageNumber
+            ]);
 
-            try {
-                const response = await axios.get('YOUR_API_URL', {
-                    params: {
-                        idNumber: this.idNumber,
-                        firstName: this.firstName,
-                        fatherName: this.fatherName,
-                        grandfatherName: this.grandfatherName,
-                        lastName: this.lastName
-                    }
-                });
-
-                if(response.data && response.data.data) {
-                    this.searchResults = response.data.data.map(item => {
-                        return {
-                            ...item,
-                            fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
-                            details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
-                        };
-                    });
-                    this.rows = this.searchResults.length;
-                    this.currentPage = 1;
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        },
-        handlePageChange() {
-            // Add any side effects that should occur when the page changes
-        },
-        clearInput() {
-            this.idNumber = '';
-            this.firstName = '';
-            this.fatherName = '';
-            this.grandfatherName = '';
-            this.lastName = '';
-            this.searchResults = [];
-            this.currentPage = 1;
-            this.rows = 0;
-        }
+        return response()->json(['data' => $results], 200);
     }
-};
-</script>
+}
