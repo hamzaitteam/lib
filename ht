@@ -21,93 +21,78 @@ export default {
     },
     computed: {
         paginatedData() {
-        const start = (this.currentPage - 1) * this.perPage;
-        const end = start + this.perPage;
-        return this.searchResults.slice(start, end);
-    },
-    totalPages() {
-        return Math.ceil(this.searchResults.length / this.perPage);
-    }
+            const start = (this.currentPage - 1) * this.perPage;
+            const end = start + this.perPage;
+            return this.searchResults.slice(start, end);
+        },
+        totalPages() {
+            return Math.ceil(this.rows / this.perPage);
+        }
     },
     methods: {
-        toInt(n){
-return Math.floor(n);
+        toInt(n) {
+            return Math.floor(n);
         },
-          
-        
-       
- async nextPage() {
-    console.log(this.currentPage);
-    console.log('t: '+ this.totalPages);
-     if (this.currentPage < this.totalPages) {
-        try {
-            this.currentPage++;
-            await this.submitForm();
- 
-           
- 
-        } catch (error) {
-            this.currentPage--;   
-        }
-    }
-
- 
-},
-    async previousPage() {
-        if (this.currentPage > 1) {
+        async nextPage() {
+            console.log(this.currentPage);
+            console.log('t: '+ this.totalPages);
+            if (this.currentPage < this.totalPages) {
+                try {
+                    this.currentPage++;
+                    await this.submitForm();
+                } catch (error) {
+                    this.currentPage--;   
+                }
+            }
+        },
+        async previousPage() {
+            if (this.currentPage > 1) {
+                try {
+                    this.currentPage--;
+                    await this.submitForm();
+                    console.log(this.currentPage);
+                } catch (error) {
+                    this.currentPage++;   
+                }
+            }
+        },
+        async submitForm() {
             try {
-                this.currentPage--;
-                await this.submitForm();
-                console.log(this.currentPage);
+                let url = 'http://127.0.0.1:8000/api/data';
+                if (this.cardId) {
+                    url += `?card_id=${this.cardId}&page_size=${this.perPage}&page_number=${this.currentPage}`;
+                } else {
+                    if (!this.firstName || !this.familyName) {
+                        Swal.fire({
+                          icon: 'error',
+                          title: 'تنبيه',
+                          text: 'على الاقل يجب ارفاق الاسم الاول واسم العائلة في حال لا يوجد لديك رقم هوية',
+                        });
+                        return;
+                    }
+                    url += `?first_name=${this.firstName}&father_name=${this.fatherName}&grandfather_name=${this.grandfatherName}&family_name=${this.familyName}&page_size=${this.perPage}&page_number=${this.currentPage}`;
+                }
+
+                const response = await axios.get(url);
+                console.log(url);
+                if(response.data && response.data.data) {
+                    this.searchResults = response.data.data.map(item => {
+                        return {
+                            ...item,
+                            fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
+                            details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
+                        };
+                    });
+
+                    // Set rows to TotalCount of the first item in the searchResults
+                    this.rows = this.searchResults[0].TotalCount;
+                }
             } catch (error) {
-                this.currentPage++;   
+                console.error(error);
             }
-        }
-}
-,
-    async submitForm() {
-    try {
-        let url = 'http://127.0.0.1:8000/api/data';
-        if (this.cardId) {
-            url += `?card_id=${this.cardId}&page_size=${this.perPage}&page_number=${this.currentPage}`;
-        } else {
-            if (!this.firstName || !this.familyName) {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'تنبيه',
-                  text: 'على الاقل يجب ارفاق الاسم الاول واسم العائلة في حال لا يوجد لديك رقم هوية',
-                });
-                return;
-            }
-            url += `?first_name=${this.firstName}&father_name=${this.fatherName}&grandfather_name=${this.grandfatherName}&family_name=${this.familyName}&page_size=${this.perPage}&page_number=${this.currentPage}`;
-        }
-
-        const response = await axios.get(url);
-console.log(url);
-        if(response.data && response.data.data) {
-            this.searchResults = response.data.data.map(item => {
-                return {
-                    ...item,
-                    fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
-                    details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
-                };
-            });
-
-              this.currentPage = Math.ceil(this.searchResults.length / this.perPage);
-
-        }
-    } catch (error) {
-        console.error(error);
-    }
-},
-
-
- 
-openDetailsModal(result) {
+        },
+        openDetailsModal(result) {
             this.selectedItem = result;
-
- 
-              
         },
         handlePageChange() {
             this.submitForm();
