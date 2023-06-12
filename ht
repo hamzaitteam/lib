@@ -1,1 +1,5 @@
-                    <input type="text" class="form-control" id="readonlyInput" readonly="readonly" :value="selectedItem ? selectedItem.someField : ''">
+openDetailsModal(item) {
+    this.selectedItem = item;
+    console.log('Selected Item:', JSON.parse(JSON.stringify(this.selectedItem)));  // convert proxy to normal object
+    $('#large').modal('show');
+},
