@@ -1,33 +1,47 @@
-<div>
-    <button @click="previousPage" :disabled="currentPage === 1">السابق</button>
+<?php
 
-    <button
-        v-for="n in visiblePages"
-        :key="n"
-        @click="goToPage(n)"
-        :class="{ 'is-active': n === currentPage }"
-    >
-        {{ n }}
-    </button>
+namespace App\Http\Controllers;
 
-    <button @click="nextPage" :disabled="currentPage === totalPages">التالي</button>
-</div>
-computed: {
-    totalPages() {
-        return Math.ceil(this.rows / this.perPage);
-    },
-    visiblePages() {
-        let minPage = Math.max(this.currentPage - 2, 1);
-        let maxPage = Math.min(minPage + 4, this.totalPages);
-        minPage = Math.max(maxPage - 4, 1);
-        return Array.from({ length: maxPage - minPage + 1 }, (_, i) => minPage + i);
+use Illuminate\Http\Request;
+use DB;
+
+class DataController extends Controller
+{
+    public  function getData(Request $request)
+    {
+        $cardId = $request->input('card_id');
+        $firstName = $request->input('first_name');
+        $fatherName = $request->input('father_name');
+        $grandFatherName = $request->input('grandfather_name');
+        $familyName = $request->input('family_name');
+        $pageSize = $request->input('page_size', 10);
+        $pageNumber = $request->input('page_number', 1);
+
+        $results = DB::select("EXEC dbo.getAll @CardId = ?, @FirstName = ?, @FatherName = ?, @GrandFatherName = ?, @FamilyName = ?, @PageSize = ?, @PageNumber = ?",
+            [
+                $cardId,
+                $firstName,
+                $fatherName,
+                $grandFatherName,
+                $familyName,
+                $pageSize,
+                $pageNumber
+            ]);
+
+        return response()->json(['data' => $results], 200);
     }
-},
 
-methods: {
-    // other methods...
-    async goToPage(page) {
-        this.currentPage = page;
-        await this.submitForm();
+    public  function getPeopleByInvNo(Request $request)
+    {
+        $invno = $request->input('invno');
+
+
+        $results = DB::select("EXEC dbo.getPeopleByInvID @invno",
+            [
+                $invno
+
+            ]);
+
+        return response()->json(['data' => $results], 200);
     }
 }
