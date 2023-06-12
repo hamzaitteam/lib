@@ -1,19 +1,13 @@
 async submitForm() {
     try {
-        let params = {};
+        let url = 'http://127.0.0.1:8000/api/data';
         if (this.cardId) {
-            params = { card_id: this.cardId, page_size: this.perPage, page_number: this.currentPage };
+            url += `?card_id=${this.cardId}&page_size=${this.perPage}&page_number=${this.currentPage}`;
         } else {
-            params = {
-                first_name: this.firstName,
-                father_name: this.fatherName,
-                grandfather_name: this.grandfatherName,
-                family_name: this.familyName,
-                page_size: this.perPage,
-                page_number: this.currentPage
-            };
+            url += `?first_name=${this.firstName}&father_name=${this.fatherName}&grandfather_name=${this.grandfatherName}&family_name=${this.familyName}&page_size=${this.perPage}&page_number=${this.currentPage}`;
         }
-        const response = await axios.get('http://127.0.0.1:8000/api/data', { params });
+
+        const response = await axios.get(url);
 
         if(response.data && response.data.data) {
             this.searchResults = response.data.data.map(item => {
