@@ -1,5 +1,174 @@
-openDetailsModal(item) {
-    this.selectedItem = item;
-    console.log('Selected Item:', JSON.parse(JSON.stringify(this.selectedItem)));  // convert proxy to normal object
-    $('#large').modal('show');
+          
+<section id="multilingual-datatable">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header border-bottom">
+                    <h4 class="card-title">عرض النتائج</h4>
+                </div>
+                <div class="card-datatable">
+                    <table class="table dataTable">
+                        <thead>
+                            <tr>
+                                 <th style="text-align: center;">رقم الهوية</th>
+                                <th style="text-align: center;">الاسم الاول </th>
+                                <th style="text-align: center;">الأب   </th>
+                                <th style="text-align: center;">  الجد </th>
+                                <th style="text-align: center;">  العائلة </th>
+                                <th style="text-align: center;">رقم هاتف </th>
+                                <th style="text-align: center;">النوع</th>
+                                <th style="text-align: center;">  تاريخ الميلاد </th>
+                                 <th style="text-align: center;">اجراء   </th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(result, index) in paginatedData" :key="index">
+                                <td>{{ result.CIT_NO }}</td>
+                                <td>{{ result.CIT_FIRST }}</td>
+                                <td>{{ result.CIT_FATHER }}</td>
+                                <td>{{ result.CIT_GRANDF }}</td>
+                                <td>{{ result.CIT_FAMLY }}</td>
+                                <td>{{ toInt(result.MOBILE) }}</td>
+                                <td>{{ result.RAT_NM }}</td>
+                                <td>{{ result.BIRTH_DT }}</td>
+                               
+                                <button class="btn btn-primary" data-toggle="modal" data-target="#large" @click="openDetailsModal(result)">عرض التفاصيل</button>
+                            </tr>
+                        </tbody>
+                        <div>
+    <button @click="previousPage()">السابق</button>
+
+    <button
+        v-for="n in totalPages"
+        :key="n"
+        @click="currentPage = n"
+        :class="{ 'is-active': n === currentPage }"
+    >
+        {{ n }}
+    </button>
+
+    <button @click="nextPage()">التالي</button>
+</div>
+                    </table>
+
+                   
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+export default {
+    data() {
+        return {
+            searchResults: [],
+            currentPage: 1,
+            perPage: 7,
+            rows: 0,
+         
+            cardId: "800298143",
+            firstName: "",
+            fatherName: "",
+            grandfatherName: "",
+            familyName: "",
+
+            selectedItem:""
+        }
+    },
+    computed: {
+        paginatedData() {
+        const start = (this.currentPage - 1) * this.perPage;
+        const end = start + this.perPage;
+        return this.searchResults.slice(start, end);
+    },
+    totalPages() {
+        return Math.ceil(this.searchResults.length / this.perPage);
+    }
+    },
+    methods: {
+        toInt(n){
+return Math.floor(n);
+        },
+        nextPage() {
+        if (this.currentPage < this.totalPages) {
+             this.currentPage++;
+             this.submitForm();
+            console.log(this.currentPage);
+
+ 
+        }
+    },
+    previousPage() {
+        if (this.currentPage > 1) {
+            this.currentPage--;
+            console.log(this.currentPage);
+            this.submitForm();
+        }
+    },
+    async submitForm() {
+    try {
+        let url = 'http://127.0.0.1:8000/api/data';
+        if (this.cardId) {
+            url += `?card_id=${this.cardId}&page_size=${this.perPage}&page_number=${this.currentPage}`;
+        } else {
+            if (!this.firstName || !this.familyName) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'تنبيه',
+                  text: 'على الاقل يجب ارفاق الاسم الاول واسم العائلة في حال لا يوجد لديك رقم هوية',
+                });
+                return;
+            }
+            url += `?first_name=${this.firstName}&father_name=${this.fatherName}&grandfather_name=${this.grandfatherName}&family_name=${this.familyName}&page_size=${this.perPage}&page_number=${this.currentPage}`;
+        }
+
+        const response = await axios.get(url);
+console.log(url);
+        if(response.data && response.data.data) {
+            this.searchResults = response.data.data.map(item => {
+                return {
+                    ...item,
+                    fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
+                    details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
+                };
+            });
+
+            console.log(this.searchResults);
+            this.rows = response.data.total ? response.data.total : this.searchResults.length; 
+        }
+    } catch (error) {
+        console.error(error);
+    }
 },
+
+
+ 
+openDetailsModal(result) {
+            this.selectedItem = result;
+
+ 
+              
+        },
+        handlePageChange() {
+            this.submitForm();
+        },
+        clearInput() {
+            this.idNumber = '';
+            this.firstName = '';
+            this.fatherName = '';
+            this.grandfatherName = '';
+            this.lastName = '';
+            this.searchResults = [];
+            this.currentPage = 1;
+            this.rows = 0;
+        }
+    }
+};
+</script>
