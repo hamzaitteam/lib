@@ -1,12 +1,8 @@
-async goToPage(pageNumber) {
-    this.currentPage = pageNumber;
-    await this.submitForm();
-}
 <div>
-    <button @click="previousPage">السابق</button>
+    <button @click="previousPage" :disabled="currentPage === 1">السابق</button>
 
     <button
-        v-for="n in totalPages"
+        v-for="n in visiblePages"
         :key="n"
         @click="goToPage(n)"
         :class="{ 'is-active': n === currentPage }"
@@ -14,5 +10,24 @@ async goToPage(pageNumber) {
         {{ n }}
     </button>
 
-    <button @click="nextPage">التالي</button>
+    <button @click="nextPage" :disabled="currentPage === totalPages">التالي</button>
 </div>
+computed: {
+    totalPages() {
+        return Math.ceil(this.rows / this.perPage);
+    },
+    visiblePages() {
+        let minPage = Math.max(this.currentPage - 2, 1);
+        let maxPage = Math.min(minPage + 4, this.totalPages);
+        minPage = Math.max(maxPage - 4, 1);
+        return Array.from({ length: maxPage - minPage + 1 }, (_, i) => minPage + i);
+    }
+},
+
+methods: {
+    // other methods...
+    async goToPage(page) {
+        this.currentPage = page;
+        await this.submitForm();
+    }
+}
