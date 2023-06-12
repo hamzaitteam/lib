@@ -1,29 +1,127 @@
-ALTER PROCEDURE [dbo].[getAll]
-    @CardId int = NULL,
-    @FirstName nvarchar(50) = NULL,
-    @FatherName nvarchar(50) = NULL,
-    @GrandFatherName nvarchar(50) = NULL,
-    @FamilyName nvarchar(50) = NULL,
-    @PageSize int = 10,
-    @PageNumber int = 1
-AS
-BEGIN
-    WITH Results AS
-    (
-        SELECT ROW_NUMBER() OVER (ORDER BY i.INV_ISSUE_DATE DESC) AS RowNumber,
-               COUNT(*) OVER () AS TotalCount,
-               c.CIT_NO, c.CIT_FIRST, c.CIT_FATHER, c.CIT_GRANDF, c.CIT_FAMLY, c.MOTHER, c.BIRTH_DT, c.CI_CITY, c.STREET_ARB, c.SEX_NO, c.MOBILE, c.SEX_AR,
-               i.INV_NO, i.ACTION_NM, i.RAT_NM, i.ADJ_NM, i.DEP_NM, i.BRA_NM, i.INV_ISSUE_DATE, i.STA_NM, i.INV_ESTDLAL1, i.INV_ESTDLAL2, i.INV_SUMMARY
-        FROM ctz c
-        FULL OUTER JOIN inv i ON c.CIT_NO = i.CIT_NO  
-        WHERE (@CardId IS NULL OR i.CIT_NO  = @CardId)
-        AND (@FirstName IS NULL OR c.CIT_FIRST  LIKE '%' + @FirstName + '%')
-        AND (@FatherName IS NULL OR c.CIT_FATHER  LIKE '%' + @FatherName + '%')
-        AND (@GrandFatherName IS NULL OR c.CIT_GRANDF  LIKE '%' + @GrandFatherName + '%')
-        AND (@FamilyName IS NULL OR c.CIT_FAMLY  LIKE '%' + @FamilyName + '%')
-    )
-    SELECT * 
-    FROM Results
-    WHERE RowNumber > (@PageNumber - 1) * @PageSize 
-    AND RowNumber <= @PageNumber * @PageSize
-END
+<script>
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
+export default {
+    data() {
+        return {
+            searchResults: [],
+            currentPage: 1,
+            perPage: 7,
+            rows: 0,
+         
+            cardId: "800298143",
+            firstName: "",
+            fatherName: "",
+            grandfatherName: "",
+            familyName: "",
+
+            selectedItem:""
+        }
+    },
+    computed: {
+        paginatedData() {
+        const start = (this.currentPage - 1) * this.perPage;
+        const end = start + this.perPage;
+        return this.searchResults.slice(start, end);
+    },
+    totalPages() {
+        return Math.ceil(this.searchResults.length / this.perPage);
+    }
+    },
+    methods: {
+        toInt(n){
+return Math.floor(n);
+        },
+          
+        
+       
+ async nextPage() {
+    console.log(this.currentPage);
+    console.log('t: '+ this.totalPages);
+     if (this.currentPage < this.totalPages) {
+        try {
+            this.currentPage++;
+            await this.submitForm();
+ 
+           
+ 
+        } catch (error) {
+            this.currentPage--;   
+        }
+    }
+
+ 
+},
+    async previousPage() {
+        if (this.currentPage > 1) {
+            try {
+                this.currentPage--;
+                await this.submitForm();
+                console.log(this.currentPage);
+            } catch (error) {
+                this.currentPage++;   
+            }
+        }
+}
+,
+    async submitForm() {
+    try {
+        let url = 'http://127.0.0.1:8000/api/data';
+        if (this.cardId) {
+            url += `?card_id=${this.cardId}&page_size=${this.perPage}&page_number=${this.currentPage}`;
+        } else {
+            if (!this.firstName || !this.familyName) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'تنبيه',
+                  text: 'على الاقل يجب ارفاق الاسم الاول واسم العائلة في حال لا يوجد لديك رقم هوية',
+                });
+                return;
+            }
+            url += `?first_name=${this.firstName}&father_name=${this.fatherName}&grandfather_name=${this.grandfatherName}&family_name=${this.familyName}&page_size=${this.perPage}&page_number=${this.currentPage}`;
+        }
+
+        const response = await axios.get(url);
+console.log(url);
+        if(response.data && response.data.data) {
+            this.searchResults = response.data.data.map(item => {
+                return {
+                    ...item,
+                    fullName: `${item.CIT_FIRST} ${item.CIT_FATHER} ${item.CIT_GRANDF} ${item.CIT_FAMLY}`,
+                    details: 'DETAILS_LINK_OR_MODAL_TRIGGER'
+                };
+            });
+
+              this.currentPage = Math.ceil(this.searchResults.length / this.perPage);
+
+        }
+    } catch (error) {
+        console.error(error);
+    }
+},
+
+
+ 
+openDetailsModal(result) {
+            this.selectedItem = result;
+
+ 
+              
+        },
+        handlePageChange() {
+            this.submitForm();
+        },
+        clearInput() {
+            this.idNumber = '';
+            this.firstName = '';
+            this.fatherName = '';
+            this.grandfatherName = '';
+            this.lastName = '';
+            this.searchResults = [];
+            this.currentPage = 1;
+            this.rows = 0;
+        }
+    }
+};
+</script>
