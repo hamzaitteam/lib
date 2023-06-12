@@ -4,6 +4,14 @@ async submitForm() {
         if (this.cardId) {
             url += `?card_id=${this.cardId}&page_size=${this.perPage}&page_number=${this.currentPage}`;
         } else {
+            if (!this.firstName || !this.familyName) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Please enter both a first name and a family name when searching without a card ID.',
+                });
+                return;
+            }
             url += `?first_name=${this.firstName}&father_name=${this.fatherName}&grandfather_name=${this.grandfatherName}&family_name=${this.familyName}&page_size=${this.perPage}&page_number=${this.currentPage}`;
         }
 
