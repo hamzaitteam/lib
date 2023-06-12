@@ -8,16 +8,7 @@ export default {
             currentPage: 1,
             perPage: 7,
             rows: 0,
-            fields: [
-                {key: 'INV_NO', label: 'رقم القضية'},
-                {key: 'CIT_NO', label: 'رقم الهوية'},
-                {key: 'fullName', label: 'الاسم'},
-                {key: 'STA_NM', label: 'حالة الشخص'},
-                {key: 'ACTION_NM', label: 'نوع القضية'},
-                {key: 'INV_ISSUE_DATE', label: 'تاريخ القضية'},
-                {key: 'MOBILE', label: 'رقم جوال'},
-                {key: 'details', label: 'التفاصيل'},
-            ],
+         
             cardId: "",
             firstName: "",
             fatherName: "",
@@ -51,10 +42,10 @@ export default {
         }
     },
         async submitForm() {
-            if (!this.cardId && (!this.firstName || !this.familyName)) {
-                alert('Please enter either a card ID or both a first name and a family name.');
-                return;
-            }
+            // if (!this.cardId && (!this.firstName || !this.familyName)) {
+            //     alert('Please enter either a card ID or both a first name and a family name.');
+            //     return;
+            // }
 
             try {
                 const response = await axios.get('http://127.0.0.1:8000/api/data', {
